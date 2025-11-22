@@ -2804,3 +2804,7 @@ nav.navbar.navbar-default {
 .whatsapp-float:hover {
     transform: scale(1.1);
 }
+
+.copyright {
+    color: white;
+}
