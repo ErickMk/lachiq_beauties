@@ -411,58 +411,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<script src="js/jquery.countup.js"></script>
 	<script>
 		// Initialize countUp with waypoints
-		$(window).load(function() {
-			setTimeout(function() {
-				if ($('.counter').length > 0) {
-					// Try to use countUp with waypoints
-					if (typeof $.fn.waypoint !== 'undefined') {
-						$('.counter').countUp();
-					}
-					
-					// Fallback: Manual scroll-based trigger for counters
-					var countersAnimated = false;
-					function checkAndAnimateCounters() {
-						if (countersAnimated) return;
-						
-						var statsSection = $('.stats');
-						if (statsSection.length > 0) {
-							var windowTop = $(window).scrollTop();
-							var windowBottom = windowTop + $(window).height();
-							var sectionTop = statsSection.offset().top;
-							var sectionBottom = sectionTop + statsSection.outerHeight();
-							
-							// If stats section is in viewport
-							if (sectionTop < windowBottom && sectionBottom > windowTop) {
-								countersAnimated = true;
-								$('.counter').each(function() {
-									var $this = $(this);
-									if (!$this.data('counterupTo')) {
-										var finalNum = parseInt($this.text().replace(/,/g, ''));
-										if (!isNaN(finalNum) && finalNum > 0) {
-											$this.data('counterupTo', finalNum);
-											var current = 0;
-											var increment = Math.max(1, Math.ceil(finalNum / 60));
-											var timer = setInterval(function() {
-												current += increment;
-												if (current >= finalNum) {
-													$this.text(finalNum);
-													clearInterval(timer);
-												} else {
-													$this.text(Math.floor(current));
-												}
-											}, 30);
-										}
-									}
-								});
-							}
-						}
-					}
-					
-					// Check on scroll and on load
-					$(window).on('scroll', checkAndAnimateCounters);
-					checkAndAnimateCounters();
+		$(document).ready(function() {
+			// Ensure counter elements have text content before initializing
+			$('.counter').each(function() {
+				var $this = $(this);
+				var text = $this.text().trim();
+				if (!text || text === '0') {
+					// If empty, try to get from data attribute or set default
+					var defaultVal = $this.data('value') || $this.attr('data-value') || '0';
+					$this.text(defaultVal);
 				}
-			}, 300);
+			});
+			
+			// Initialize countUp after a short delay to ensure waypoints is loaded
+			setTimeout(function() {
+				if ($('.counter').length > 0 && typeof $.fn.waypoint !== 'undefined') {
+					$('.counter').countUp();
+				}
+			}, 200);
 		});
 	</script>
 	<!-- //stats -->

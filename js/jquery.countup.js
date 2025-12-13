@@ -31,6 +31,11 @@
             var delay = parseInt($this.data("counter-delay")) > 0 ? parseInt($this.data("counter-delay")) : $settings.delay;
             var divisions = time / delay;
             var num = $this.data('counterupTo');
+            // Ensure num is a string
+            if (num === null || num === undefined) {
+                num = $this.text() || '0';
+            }
+            num = String(num);
             var nums = [num];
             var isComma = /[0-9]+,[0-9]+/.test(num);
             num = num.replace(/,/g, '');
