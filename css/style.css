@@ -582,8 +582,9 @@ span.ttt {
 .team{
 	padding: 5em 0;
 }
-.agileits_team_grid_figure{
-	text-align: center;
+.agileits_team_grid_figure img{
+	margin: 0 auto;
+	display: block;
 }
 .agileits_team_grid_figure_social{
 	margin:4em 0 0 0.5em;
