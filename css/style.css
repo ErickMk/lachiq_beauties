@@ -2809,12 +2809,6 @@ nav.navbar.navbar-default {
     transform: scale(1.1);
 }
 
-/* Custom TikTok icon for Font Awesome 4.7 compatibility */
-.fa-tiktok:before {
-    content: "\f1fc"; /* Using video-camera icon as it's similar in style - matches social media icon aesthetic */
-    font-family: FontAwesome;
-}
-
 .copyright {
     color: white;
 }
