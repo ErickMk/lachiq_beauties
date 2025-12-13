@@ -105,7 +105,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="agile_banner_social">
 				<ul class="agileits_social_list">
 					<li><a href="https://www.instagram.com/la_chiq_beauties/" class="w3_agile_facebook" target="blank" rel="noopener noreferrer"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-					<li><a href="https://www.tiktok.com/@lachiqbeauties" class="agile_twitter" target="blank" rel="noopener noreferrer"><i class="fa fa-tiktok" aria-hidden="true"></i><img src="./images/tiktok.png" width="40" alt="tiktok icon" /></a></li>
+					<li><a href="https://www.tiktok.com/@lachiqbeauties" class="agile_twitter" target="blank" rel="noopener noreferrer"><i class="fa fa-tiktok" aria-hidden="true"><img src="./images/tiktok.png" width="40px"tiktok icon>
+					</i></a></li>
 					<li><a href="#" class="w3_agile_dribble"><i class="fa fa-phone" aria-hidden="true"></i></a></li>
 					<li><a href="https://wa.me/254707LA CHIQ BEAUTIES1118?text=Hello%20La%20Chiq%20Beauties!%20I%20visited%20your%20website%20and%20I%27d%20like%20to%20book%20your%20[nails/makeup/facials/etc.]%20service." class="w3_agile_vimeo"><i class="fa fa-whatsapp" width="55px" aria-hidden="true"></i></a></li>
 				</ul>
@@ -275,53 +276,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		</div>
 </div>
 <!-- //team -->
-<!-- testimonials -->
-	<div class="testimonials jarallax">
-		<div class="container">
-			<h3 class="w3ls_head"><span>Our </span>Clients Say</h3>
-			<p class="w3agile">La chiq beauties
-				</p>
-				
-			<div class="w3ls_testimonials_grids">
-				 <section class="center slider">
-						<div class="agileits_testimonial_grid">
-							<div class="w3l_testimonial_grid">
-								<p>In eu auctor felis, id eleifend dolor. Integer bibendum dictum erat, 
-									non laoreet dolor.</p>
-								<h4>Rosy Crisp</h4>
-								<h5>Lorem</h5>
-								<div class="w3l_testimonial_grid_pos">
-									<img src="images/1.png" alt=" " class="img-responsive" />
-								</div>
-							</div>
-						</div>
-						<div class="agileits_testimonial_grid">
-							<div class="w3l_testimonial_grid">
-								<p>In eu auctor felis, id eleifend dolor. Integer bibendum dictum erat, 
-									non laoreet dolor.</p>
-								<h4>Laura Paul</h4>
-								<h5>Lorem</h5>
-								<div class="w3l_testimonial_grid_pos">
-									<img src="images/2.png" alt=" " class="img-responsive" />
-								</div>
-							</div>
-						</div>
-						<div class="agileits_testimonial_grid">
-							<div class="w3l_testimonial_grid">
-								<p>In eu auctor felis, id eleifend dolor. Integer bibendum dictum erat, 
-									non laoreet dolor.</p>
-								<h4>Michael Doe</h4>
-								<h5>Lorem</h5>
-								<div class="w3l_testimonial_grid_pos">
-									<img src="images/1.png" alt=" " class="img-responsive" />
-								</div>
-							</div>
-						</div>
-				</section>
-			</div>
-		</div>
-	</div>
-<!-- //testimonials -->
+
 <!-- footer -->
 	<div class="footer">
 		<div class="container">
@@ -455,8 +410,59 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<script src="js/jquery.waypoints.min.js"></script>
 	<script src="js/jquery.countup.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('.counter').countUp();
+		// Initialize countUp with waypoints
+		$(window).load(function() {
+			setTimeout(function() {
+				if ($('.counter').length > 0) {
+					// Try to use countUp with waypoints
+					if (typeof $.fn.waypoint !== 'undefined') {
+						$('.counter').countUp();
+					}
+					
+					// Fallback: Manual scroll-based trigger for counters
+					var countersAnimated = false;
+					function checkAndAnimateCounters() {
+						if (countersAnimated) return;
+						
+						var statsSection = $('.stats');
+						if (statsSection.length > 0) {
+							var windowTop = $(window).scrollTop();
+							var windowBottom = windowTop + $(window).height();
+							var sectionTop = statsSection.offset().top;
+							var sectionBottom = sectionTop + statsSection.outerHeight();
+							
+							// If stats section is in viewport
+							if (sectionTop < windowBottom && sectionBottom > windowTop) {
+								countersAnimated = true;
+								$('.counter').each(function() {
+									var $this = $(this);
+									if (!$this.data('counterupTo')) {
+										var finalNum = parseInt($this.text().replace(/,/g, ''));
+										if (!isNaN(finalNum) && finalNum > 0) {
+											$this.data('counterupTo', finalNum);
+											var current = 0;
+											var increment = Math.max(1, Math.ceil(finalNum / 60));
+											var timer = setInterval(function() {
+												current += increment;
+												if (current >= finalNum) {
+													$this.text(finalNum);
+													clearInterval(timer);
+												} else {
+													$this.text(Math.floor(current));
+												}
+											}, 30);
+										}
+									}
+								});
+							}
+						}
+					}
+					
+					// Check on scroll and on load
+					$(window).on('scroll', checkAndAnimateCounters);
+					checkAndAnimateCounters();
+				}
+			}, 300);
 		});
 	</script>
 	<!-- //stats -->
@@ -501,7 +507,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			speed: 0.5,
 			imgWidth: 1366,
 			imgHeight: 768
-		})
+		});
+		
+		/* Refresh waypoints after jarallax to ensure stats work */
+		$(document).ready(function() {
+			setTimeout(function() {
+				// Refresh waypoints if available (for waypoints 4.0)
+				if (typeof Waypoint !== 'undefined') {
+					Waypoint.refreshAll();
+				}
+			}, 600);
+		});
 	</script>
 
 </body>
