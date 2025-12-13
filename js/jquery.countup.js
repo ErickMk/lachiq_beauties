@@ -36,13 +36,25 @@
                 num = $this.text() || '0';
             }
             num = String(num);
-            var nums = [num];
             var isComma = /[0-9]+,[0-9]+/.test(num);
             num = num.replace(/,/g, '');
             var isInt = /^[0-9]+$/.test(num);
             var isFloat = /^[0-9]+\.[0-9]+$/.test(num);
             var decimalPlaces = isFloat ? (num.split('.')[1] || []).length : 0;
+            
+            // Validate that num is a valid number
+            var numValue = isFloat ? parseFloat(num) : parseInt(num, 10);
+            if (isNaN(numValue) || numValue < 0) {
+                // Invalid number, don't proceed with animation
+                return;
+            }
+            
+            // Ensure divisions is valid
+            if (isNaN(divisions) || divisions <= 0) {
+                divisions = 50; // Default fallback
+            }
 
+            var nums = [];
             // Generate list of incremental numbers to display
             for (var i = divisions; i >= 1; i--) {
 
@@ -63,14 +75,31 @@
 
                 nums.unshift(newNum);
             }
+            
+            // Ensure nums array has values
+            if (!nums || nums.length === 0) {
+                // If no numbers generated, just set the final value
+                var finalValue = isComma ? numValue.toLocaleString() : String(numValue);
+                $this.text(finalValue);
+                return;
+            }
 
             $this.data('counterup-nums', nums);
             $this.text('0');
 
             // Updates the number until we're done
             var f = function() {
-                $this.text($this.data('counterup-nums').shift());
-                if ($this.data('counterup-nums').length) {
+                var counterNums = $this.data('counterup-nums');
+                if (!counterNums || !Array.isArray(counterNums) || counterNums.length === 0) {
+                    // If no numbers array, restore original value and exit
+                    var originalValue = $this.data('counterupTo') || '0';
+                    $this.text(originalValue);
+                    $this.data('counterup-nums', null);
+                    $this.data('counterup-func', null);
+                    return;
+                }
+                $this.text(counterNums.shift());
+                if (counterNums.length) {
                     setTimeout($this.data('counterup-func'),delay);
                 } else {
                     delete $this.data('counterup-nums');
